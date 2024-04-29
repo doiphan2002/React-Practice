@@ -1,44 +1,51 @@
-import axios from 'axios';
-import Table from 'react-bootstrap/Table';
-import { useEffect } from 'react';
 
+import Table from 'react-bootstrap/Table';
+import { useEffect, useState } from 'react';
+import {fetchAllUser} from '../services/UserService';
 
 const TableUsers = (props) => {
 
-    useEffect(() => {
-        // call API
-        axios.get("https://reqres.in/api/users?page=2").then( data => {
-            console.log(">>> check data: ",data);
-        })
-    },[])
+  const [listUsers, setListUsers] = useState([]);
+  useEffect(() => {
+    // call API 
+    // dry
+    getUsers();
+
+  }, [])
+  const getUsers = async () => {
+    let res = await fetchAllUser();
+    if ( res && res.data && res.data.data) {
+      setListUsers(res.data.data)
+    }
+  }
+   console.log(listUsers);
     return (
         <Table striped bordered hover>
       <thead>
         <tr>
-          <th>#</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Username</th>
+          <th>ID</th>
+          <th>email</th>
+          <th>first_name</th>
+          <th>last_name</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td colSpan={2}>Larry the Bird</td>
-          <td>@twitter</td>
-        </tr>
+        {listUsers &&listUsers.length > 0 &&
+
+        listUsers.map((item, index) => {
+          return (
+            <tr key={`users-${index}`}>
+            <td>{item.id}</td>
+            <td>{item.email}</td>
+            <td>{item.first_name}</td>
+            <td>{item.last_name}</td>
+          </tr>
+
+          )
+        })
+        
+        }
+       
       </tbody>
     </Table>
     )
