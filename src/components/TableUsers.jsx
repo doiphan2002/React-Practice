@@ -1,9 +1,12 @@
 
 import Table from 'react-bootstrap/Table';
-import { useEffect, useState } from 'react';
+import { cloneElement, useEffect, useState } from 'react';
 import {fetchAllUser} from '../services/UserService';
 import ReactPaginate from 'react-paginate';
 import ModallAddNew from './ModalAddNew';
+import ModalEditUser from './ModalEditUser';
+import _ from "lodash"
+
 
 const TableUsers = (props) => {
 
@@ -11,13 +14,30 @@ const TableUsers = (props) => {
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalPgaes, setTotalPages] = useState(0);
   const [isShowModalAddNew, setIsShowModalAddNew] =  useState(false);
-  
+  const [isShowModalEdit, setIsShowModalEdit] =  useState(false);
+  const [dataUserEdit, setDtaUserEdit] = useState({})
+
+
   const handleClose = () => {
     setIsShowModalAddNew(false);
+    setIsShowModalEdit(false);
   }
 
   const handleUpdateTable = (user) => {
-    setListUsers([user,... listUsers])
+    setListUsers([user,...listUsers])
+  }
+
+  const handleEditUserFromModal = (user) => {
+    let cloneListUsers = _.cloneDeep(listUsers)
+    let index = listUsers.findIndex(item => item.id === user.id);
+    cloneListUsers[index].first_name= user.first_name
+
+  }
+
+  const handleEditUser = (user) => {
+    console.log(user)
+    setDtaUserEdit(user);
+    setIsShowModalEdit(true);
   }
  
   useEffect(() => {
@@ -56,6 +76,7 @@ const TableUsers = (props) => {
           <th>email</th>
           <th>first_name</th>
           <th>last_name</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -68,6 +89,12 @@ const TableUsers = (props) => {
             <td>{item.email}</td>
             <td>{item.first_name}</td>
             <td>{item.last_name}</td>
+            <td>
+              <button className='btn btn-warning mx-3'
+              onClick={() => handleEditUser(item)}
+              >Edit</button>
+              <button className='btn btn-danger'>Delete</button>
+            </td>
           </tr>
 
           )
@@ -99,6 +126,14 @@ const TableUsers = (props) => {
       show={isShowModalAddNew}
       handleClose={handleClose}
       handleUpdateTable={handleUpdateTable}
+      />
+
+      <ModalEditUser 
+      show={isShowModalEdit}
+      dataUserEdit={dataUserEdit}
+      handleClose={handleClose}
+      handleEditUserFromModal={handleEditUserFromModal}
+      
       />
    </>
     )
