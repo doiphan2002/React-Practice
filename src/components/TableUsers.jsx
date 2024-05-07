@@ -7,6 +7,7 @@ import ModallAddNew from './ModalAddNew';
 import ModalEditUser from './ModalEditUser';
 import ModalConfirm from './ModalConfirm';
 import _ from "lodash"
+import './TableUser.scss';
 
 
 const TableUsers = (props) => {
@@ -18,7 +19,9 @@ const TableUsers = (props) => {
   const [isShowModalEdit, setIsShowModalEdit] =  useState(false);
   const [dataUserEdit, setDtaUserEdit] = useState({})
   const [isShowModalDelete, setIsShowModalDelete] = useState(false);
-  const [dataUserDetele, setDtaUserDelete] = useState({})
+  const [dataUserDetele, setDtaUserDelete] = useState({});
+  const [sortBy, setSortBy] = useState("asc");
+  const [sortField, setSortField] =useState("id");
 
 
   const handleClose = () => {
@@ -75,6 +78,18 @@ const TableUsers = (props) => {
     console.log("event lib:", event)
     getUsers(+event.selected + 1);
   }
+
+  const hanleSort = (sortBy, sortField) => {
+    setSortBy(sortBy); 
+    setSortField(sortField);
+
+    let cloneListUsers =  _.cloneDeep(listUsers);
+    cloneListUsers = _.orderBy(cloneListUsers, [sortField], [sortBy]);
+    setListUsers(cloneListUsers);
+  
+  }
+
+  
     return ( 
     <>
     <div className='my-3 add-new'>
@@ -86,11 +101,39 @@ const TableUsers = (props) => {
         <Table striped bordered hover>
       <thead>
         <tr>
-          <th>ID</th>
-          <th>email</th>
-          <th>first_name</th>
-          <th>last_name</th>
-          <th>Action</th>
+          <th>
+            <div className='sort-header'>
+            <span>ID</span>
+            <span>
+            <i 
+            className='fa-solid fa-arrow-down-long'
+            onClick={() => hanleSort("desc", "id")}
+            ></i>
+            <i 
+            className='fa-solid fa-arrow-up-long'
+            onClick={() => hanleSort("asc", "id")}></i>
+            </span>
+            </div>
+            
+          </th>
+          <th>Email</th>
+          <th>
+          <div  className='sort-header'>
+          <span>First_name</span>
+            <span>
+            <i 
+            className='fa-solid fa-arrow-down-long'
+            onClick={() => hanleSort("desc", "first_name")}
+            ></i>
+            <i 
+            className='fa-solid fa-arrow-up-long'
+            onClick={() => hanleSort("asc", "first_name")}
+            ></i>
+            </span>
+            </div>
+            </th>
+          <th >Last_name</th>
+          <th >Action</th>
         </tr>
       </thead>
       <tbody>
