@@ -8,6 +8,7 @@ import ModalEditUser from './ModalEditUser';
 import ModalConfirm from './ModalConfirm';
 import _, { debounce } from "lodash"
 import './TableUser.scss';
+import { CSVLink, CSVDownload } from 'react-csv';
 
 
 const TableUsers = (props) => {
@@ -23,6 +24,7 @@ const TableUsers = (props) => {
   const [sortBy, setSortBy] = useState("asc");
   const [sortField, setSortField] =useState("id");
   const [searchByEmail, setSearchByEmail] = useState("");
+
 
 
   const handleClose = () => {
@@ -103,16 +105,36 @@ const TableUsers = (props) => {
 
   }, 500)
 
+  const csvData = [
+    ["firstname", "lastname", "email"],
+    ["Ahmed", "Tomi", "ah@smthing.co.com"],
+    ["Raed", "Labes", "rl@smthing.co.com"],
+    ["Yezzi", "Min l3b", "ymin@cocococo.com"]
+  ]
+
   
     return ( 
     <>
     <div className='my-3 add-new'>
           <span><b>List Users:</b></span>
-          <button className='btn btn-success' 
+          <div className='group-btns'>
+            <label htmlFor="test" className='btn btn-warning'>
+            <i className='fa-solid fa-file-import'></i> Import</label>
+            <input id='test' type='file' hidden/>
+            <CSVLink 
+            data={csvData}
+            className='btn btn-primary'
+            target='_blank'
+            filename={"users.csv"}
+            > <i className='fa-solid fa-file-arrow-down'></i> Export</CSVLink>
+            <button className='btn btn-success' 
           onClick={() => setIsShowModalAddNew(true)} 
-          >Add new user</button>
+          >
+            <i className='fa-solid fa-circle-plus'></i> Add new 
+            </button>
+          </div>
         </div>
-        <div className='col-6 my-3'>
+        <div className='col-4 my-3'>
           <input 
           className='form-control' 
           placeholder='Search user by email...'
