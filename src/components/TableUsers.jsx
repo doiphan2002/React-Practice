@@ -24,6 +24,7 @@ const TableUsers = (props) => {
   const [sortBy, setSortBy] = useState("asc");
   const [sortField, setSortField] =useState("id");
   const [searchByEmail, setSearchByEmail] = useState("");
+  const [dataExport, setDataExport] = useState([]);
 
 
 
@@ -112,6 +113,23 @@ const TableUsers = (props) => {
     ["Yezzi", "Min l3b", "ymin@cocococo.com"]
   ]
 
+  const getUsersExport = (event, done ) => {
+    let result = [];
+    if(listUsers && listUsers.length > 0 ) {
+      result.push(["Id", "Email", "First name", "Last name"])
+      listUsers.map((item, index) => {
+        let arr = [];
+        arr[0] = item.id;
+        arr[1] = item.email;
+        arr[2] = item.first_name;
+        arr[3] = item.last_name;
+        result.push(arr);
+      })
+      setDataExport(result);
+      done();
+    }
+  }
+
   
     return ( 
     <>
@@ -122,7 +140,9 @@ const TableUsers = (props) => {
             <i className='fa-solid fa-file-import'></i> Import</label>
             <input id='test' type='file' hidden/>
             <CSVLink 
-            data={csvData}
+            data={dataExport}
+            asyncOnClick={true}
+            onClick={(event, done) => getUsersExport(event, done)}
             className='btn btn-primary'
             target='_blank'
             filename={"users.csv"}
