@@ -6,7 +6,7 @@ import ReactPaginate from 'react-paginate';
 import ModallAddNew from './ModalAddNew';
 import ModalEditUser from './ModalEditUser';
 import ModalConfirm from './ModalConfirm';
-import _ from "lodash"
+import _, { debounce } from "lodash"
 import './TableUser.scss';
 
 
@@ -22,6 +22,7 @@ const TableUsers = (props) => {
   const [dataUserDetele, setDtaUserDelete] = useState({});
   const [sortBy, setSortBy] = useState("asc");
   const [sortField, setSortField] =useState("id");
+  const [searchByEmail, setSearchByEmail] = useState("");
 
 
   const handleClose = () => {
@@ -89,6 +90,19 @@ const TableUsers = (props) => {
   
   }
 
+  const handleSearch = debounce((event) => {
+    let term = event.target.value;
+    if (term) {
+      let cloneListUsers =  _.cloneDeep(listUsers);
+      cloneListUsers = cloneListUsers.filter(item => item.email.includes(term))
+      setListUsers(cloneListUsers);
+
+    } else {
+      getUsers(1);
+    }
+
+  }, 500)
+
   
     return ( 
     <>
@@ -98,6 +112,16 @@ const TableUsers = (props) => {
           onClick={() => setIsShowModalAddNew(true)} 
           >Add new user</button>
         </div>
+        <div className='col-6 my-3'>
+          <input 
+          className='form-control' 
+          placeholder='Search user by email...'
+          // value={searchByEmail}
+          onChange={(event) => handleSearch(event)}
+          />
+        </div>
+
+
         <Table striped bordered hover>
       <thead>
         <tr>
