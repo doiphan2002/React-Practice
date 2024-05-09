@@ -7,12 +7,14 @@ import { Container } from 'react-bootstrap';
 import { ToastContainer} from 'react-toastify';
 import { Routes, Route, Link } from 'react-router-dom';
 import Login from './components/Login';
+import { UserContext } from './context/UserContext';
+import { useContext } from 'react';
 
 
 function App() {
   
-
-
+  const { user } = useContext(UserContext);
+  console.log(">> user:", user)
   return (
     <>
     <div className='app-container'>
