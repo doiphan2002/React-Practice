@@ -32,7 +32,7 @@ const Login = () => {
         let res =  await loginApi(email, password);
         if(res && res.token) {
             loginContext(email, res.token);
-            navigate("/users");
+            navigate("/");
         } else {
             // error
             if (res && res.status === 400) {
@@ -40,6 +40,10 @@ const Login = () => {
             }
         }
         setLoadingAPI(false);
+    }
+
+    const handleGoBack = () => {
+        navigate("/");
     }
 
 
@@ -73,7 +77,9 @@ const Login = () => {
             &nbsp;Login
             </button>
         <div className="back">
-            <i className="fa-solid fa-angles-left"></i> Go back</div>
+            <i className="fa-solid fa-angles-left"></i>
+            <span onClick={() => handleGoBack()}>&nbsp;Go back</span>
+            </div>
 
     </div>
     )

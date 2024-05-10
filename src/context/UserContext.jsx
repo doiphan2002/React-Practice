@@ -13,10 +13,12 @@ const UserProvider = ({ children }) => {
       auth: true,
     }));
     localStorage.setItem("token", token);
+    localStorage.setItem("email", email);
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("email");
     setUser((user) => ({
       email: '',
       auth: false,

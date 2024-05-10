@@ -5,17 +5,26 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import logoApp from '../assets/img/logo192.png';
 import { useLocation, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 
 const Header = (props) => {
 
   const { logout, user } = useContext(UserContext);
+
+  const [hidenHeader, setHidenHeader] = useState(false);
+
+  // useEffect(() => {
+  //   if(window.location.pathname === '/login') {
+  //     setHidenHeader(true);
+  //   }
+  // },[])
+  
   const navigate =  useNavigate();
- 
+
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate("/");
     toast.success("Log out success");
   }
   
@@ -35,8 +44,9 @@ const Header = (props) => {
             </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
+          {(user && user.auth || window.location.pathname === '/') && 
+              <>
             <Nav className="me-auto">
-              
               <NavLink to="/" className="nav-link">Home</NavLink>
               <NavLink to="/users" className="nav-link">Manage Users</NavLink>
               </Nav>
@@ -49,6 +59,9 @@ const Header = (props) => {
               }
               </NavDropdown>
             </Nav>
+            </>
+            }
+
           </Navbar.Collapse>
         </Container>
       </Navbar>
